@@ -22,14 +22,14 @@ class PriorityQueue(object):
     # O(n)
     def delete(self):
         try:
-            max = -1
-            max_id = -1
+            min = 100 #over upper bound for priority
+            min_id = -1
             for k, v in self.queue.items():
-                if v > max:
-                    max = v
-                    max_id = k
-            del self.queue[max_id]
-            return max_id
+                if v < min:
+                    min = v
+                    min_id = k
+            del self.queue[min_id]
+            return min_id
         except IndexError:
             print()
             exit()
