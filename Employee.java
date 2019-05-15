@@ -13,7 +13,7 @@ public class Employee {
   private int max_hrs;
   private int[] priorites;
   private double avg_priorites;
-  private boolean has_attending_week;
+  private int num_attending_weeks;
 
   Employee(int empl_id, String name, boolean moonlighter){
     this.empl_id = empl_id;
@@ -25,16 +25,20 @@ public class Employee {
     int NUM_SHIFTS = 19;
     this.priorites = new int[NUM_SHIFTS];
     this.avg_priorites = 0;
-    this.has_attending_week = false;
+    this.num_attending_weeks = -1;
   }
 
   // getters and setters
+  public int getHours_count() {
+    return hours_count;
+  }
+
   public double getAvgPriority() {
     return avg_priorites;
   }
 
-  public boolean getHasAttendingWeek(){
-    return has_attending_week;
+  public int getNumAttendingWeeks(){
+    return num_attending_weeks;
   }
 
   public int getEmpl_id() {
@@ -57,12 +61,16 @@ public class Employee {
     return priorites;
   }
 
+  public void setHours_count(int hours_count){
+    this.hours_count = hours_count;
+  }
+
   public void setAvgPriority(double avg_priorites) {
     this.avg_priorites = avg_priorites;
   }
 
-  public void setHasAttendingWeek(bool has_attending_week) {
-    this.has_attending_week = has_attending_week;
+  public void setNumAttendingWeek(int num_attending_weeks) {
+    this.num_attending_week = num_attending_weeks;
   }
 
   public void setEmpl_id(int empl_id) {
@@ -101,5 +109,5 @@ public class Employee {
     this.avg_priorites = this.avg_priorites / NUM_SHIFTS;
     return avg_priorites;
   }
-
+  
 }
