@@ -8,7 +8,7 @@ public class Shift {
     this.shift_id = shift_id;
     this.time_slot = time_slot;
     this.day = day;
-    this.employ_id = -1
+    this.employ_id = -1;
   }
 
   public String toString() {
