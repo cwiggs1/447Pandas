@@ -12,8 +12,10 @@ public class Employee {
   private int hours_count;
   private int max_hrs;
   private int[] priorites;
+  private double[] morning_priorites;
   private double avg_priorites;
   private int num_attending_weeks;
+  private double avg_morning_priority;
 
   Employee(int empl_id, String name, boolean moonlighter){
     this.empl_id = empl_id;
@@ -25,10 +27,29 @@ public class Employee {
     int NUM_SHIFTS = 19;
     this.priorites = new int[NUM_SHIFTS];
     this.avg_priorites = 0;
-    this.num_attending_weeks = -1;
+    this.num_attending_weeks = 0;
+    this.avg_morning_priority = 0;
+    int NUM_ATTENDING_WEEKS = 13;
+    this.morning_priorites = new double[NUM_ATTENDING_WEEKS];
   }
 
   // getters and setters
+  public void setAvgMorningPriority(double number) {
+    this.avg_morning_priority = number;
+  }
+
+  public void setMorningPriority(int index, double number) {
+    this.morning_priorites[index] = number;
+  }
+
+  public double getMorningPriority(int index) {
+    return morning_priorites[index];
+  }
+
+  public int getAvgMorningPriority() {
+    return avg_morning_priority;
+  }
+
   public int getHours_count() {
     return hours_count;
   }
@@ -109,5 +130,22 @@ public class Employee {
     this.avg_priorites = this.avg_priorites / NUM_SHIFTS;
     return avg_priorites;
   }
-  
-}
+
+  public double loopAttendWeekPriority(int numWeeks) {
+    double tempAvg = 0;
+    for (int i = (numWeeks * 19); i <= ((numWeeks * 19) + 15); i += 3) {
+      tempAvg += getPriority(i);
+    }
+    return tempAvg;
+  }
+
+  public double setupAttendingAvgPriority() {
+    double tempNumber = 0;
+    //for the number of weeks during a scheduling session (13 weeks)
+    for (int i = 0; i < 13; i++) {
+      //call attending week function to calculate the average priority over that week
+      tempNumber += loopAttendWeekPriority(i);
+      setMorningPriority(i, tempNumber);
+    }
+    setAvgMorningPriority((tempNumber / 65));
+  }
