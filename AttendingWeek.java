@@ -3,29 +3,23 @@ import java.util.Objects;
 import java.util.ArrayList;
 
 
-
 public Class AttendingWeek {
 
     public static int daysPerPeriod = 65;
     public static int weeksPerPeriod = 13;
 
-
-    private int[13] schedule;
+    private Employee[] schedule = new Employee[weeksPerPeriod];
 
     //get an array of approx 65 ints from each employee
     //those ints are constraints 0 being can't work, 3 being available
     //employee has num_attending_weeks that is an int (0-13) of weeks where they can work all shifts
-    public int[] ScheduleAttendingWeeks(int[] employees) {  //inside the employee array should be a variable with a 65 int array
+    public Employee[] ScheduleAttendingWeeks(Employee[] employees) {  //inside the employee array should be a variable with a 65 int array
 
-        int id = employees[i].getEmpl_id();
-        int AWnum = employees[i].getNumAttendingWeeks();  //the lower this value the higher priority
-
-
-        //check which employee has the lowest num_attending_weeks
         int lowestAW = employees[0].getNumAttendingWeeks();
         Employee priorityEmpl;
 
-         for (int i = 1; i < len(employees); i++)  //finds the lowest num attending weeks to know which employee to schedule
+        //check which employee has the lowest num_attending_weeks
+        for (int i = 1; i < len(employees); i++)  //finds the lowest num attending weeks to know which employee to schedule
         {
             if(employees[i].getNumAttendingWeeks() < lowestAW && employees[i].getNumAttendingWeeks() > 0)  
             {
@@ -56,7 +50,7 @@ public Class AttendingWeek {
                 {
                     leastConstrained = employees[j];
                     lowestConstraint = emplConstraints[j];
-                    schedule[i] = leastConstrained.getEmpl_id();
+                    schedule[i] = leastConstrained;
                     noFree = true;
                 }
             }
@@ -73,7 +67,7 @@ public Class AttendingWeek {
                     }
                 }
 
-                schedule[i] = priorityEmpl.getEmpl_id();  //assigns employee to work 
+                schedule[i] = priorityEmpl;  //assigns best employee to work 
             }
 
             //must reset some values for next iteration of loop
