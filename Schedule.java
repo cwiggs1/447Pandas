@@ -143,6 +143,12 @@ public class Schedule {
 		//assign a moonlighter to all unfilled shifts
 		//assign a moonlighter instead if someone has a constraint infringed upon and there haven't been too many moonlighters assigned
 		
+
+		//put every employee id into the shifts arraylist
+		for (int a = 0; a < shifts.size(); a++)  //shifts.size should be TOTALSHIFTS (274)
+		{
+			shifts[a].setDoctor(employeeSchedule[a]);
+		}
 		
 		return 0;
 	}
@@ -167,6 +173,8 @@ public class Schedule {
 
 	public int[] getAWIndex();
 	{
+		int[] awIndex = new int[WEEKSPERPERIOD * 5];
+
 		for (int i = 0; i < TOTALSHIFTS; i++)
 		{
 			//if it is a morning weekday shift then add it to awIndex
@@ -176,10 +184,14 @@ public class Schedule {
 				count++;
 			}
 		}
+
+		return awIndex;
 	}
 
 	public int[] getAfternoonIndex();
 	{
+		int[] afIndex = new int[WEEKSPERPERIOD * 5];
+
 		for (int i = 0; i < TOTALSHIFTS; i++)
 		{
 			//if it is an afternoon weekday shift then add it 
@@ -189,10 +201,14 @@ public class Schedule {
 				count++;
 			}
 		}
+
+		return afIndex;
 	}
 
 	public int[] getEveningIndex();
 	{
+		int[] evIndex = new int[WEEKSPERPERIOD * 5];
+
 		for (int i = 0; i < TOTALSHIFTS; i++)
 		{
 			//if it is an evening weekday shift then add it
@@ -202,10 +218,14 @@ public class Schedule {
 				count++;
 			}
 		}
+
+		return evIndex;
 	}
 
 	public int[] getWeekendIndex();
 	{
+		int[] weIndex = new int[WEEKSPERPERIOD * 4];
+
 		for (int i = 0; i < TOTALSHIFTS; i++)
 		{
 			//if it is a weekend shift then add it
@@ -215,6 +235,8 @@ public class Schedule {
 				count++;
 			}
 		}
+
+		return weIndex;
 	}
 
 	//returns an ArrayList of all employees that are free for that shift or an array with all employees that are most free
