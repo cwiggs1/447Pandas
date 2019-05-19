@@ -11,6 +11,7 @@ public class Employee {
   private boolean moonlighter;
   private int shift_count;
   private int hours_count;
+  private int[] shift_type;
   private int max_hrs;
   private int[] priorites;
   private double[] morning_priorites;
@@ -27,6 +28,7 @@ public class Employee {
     this.moonlighter = moonlighter;
     this.shift_count = 0; //start w/ zero
     this.hours_count = 0; //start w/ zero
+    this.shift_type = new int[3]; //this should initialize all values to 0. index0 is afternoon shifts, index1 is evening, index2 is weekend
     this.max_hrs = 40;
     int NUM_SHIFTS = 19;
     this.priorites = new int[NUM_SHIFTS];
@@ -61,6 +63,10 @@ public class Employee {
 
   public int getHours_count() {
     return hours_count;
+  }
+
+  public int[] getShiftType() {
+    return shift_type;
   }
 
   public double getAvgPriority() {

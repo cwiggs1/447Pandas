@@ -45,7 +45,7 @@ public class Schedule {
 		for (int i = 0; i < (WEEKSPERPERIOD * 5); i++)
 		{
 			employeeSchedule[awIndex[i]] = awDoctors[weekCount];  //every time a doctor is put into employee schedule their shift count and hour count should be increased
-			awDoctors[weekCount].shift_count += 1;
+			awDoctors[weekCount].shift_count += 1;  
 			awDoctors[weekCount].hours_count += 8;  //aw shifts are always 8 hour morning shifts
 
 			if (i % 5 == 4)  //after every fifth shift (friday) is assigned, increment the week count
@@ -54,8 +54,11 @@ public class Schedule {
 			}
 		}
 
+		//declare variables for future use
 		ArrayList<Employee> availableDoctors;
 		int shiftType;  //afternoon shift is 0, evening is 1, weekend is 2
+		int moonlighterCount = 0;
+		Employee bestPick;
 
 		//this for loop should fill the rest of the shifts in employeeSchedule
 		for (int currShift = 0; currShift < TOTALSHIFTS; currShift++)
@@ -66,7 +69,7 @@ public class Schedule {
 				continue;  //if the slot is already filled then skip it.
 			}
 
-			//assign the type of shift by cycling through max number of type of shifts (13 weeks times 5 days a week)
+			//figure out the type of shift by cycling through max number of type of shifts (13 weeks times 5 days a week)
 			for(int j = 0; j < (WEEKSPERPERIOD * 5); j++)
 			{
 				if(afIndex[j] == currShift)  //check afternoon shifts
@@ -85,28 +88,60 @@ public class Schedule {
 
 			//find all employees availability for this shift (could be empty arraylist if nobody is available)
 			availableDoctors = getAvailability(employees, currShift);
+			bestPick = availableDoctors[0];  //initialize bestPick to something, it will start at 0 in the following loop anyways
 
 			if(availableDoctors.isEmpty())
 			{
 				//assign a moonlighter
+				moonlighterCount += 1;
 			}
 			else  //search through available doctors and pick one based on how many shifts they have 
 			{
 				for (int k = 0; k < availableDoctors.size(); k++)
 				{
-					
+					//if they had a shift one or two spots ago, don't assign them
+					if ((employeeSchedule[currShift - 1] == availableDoctors[k].getEmpl_id()) || (employeeSchedule[currShift - 2] == availableDoctors[k].getEmpl_id())
+					{
+						//not considered in bestPick
+						continue;
+					}
+					else 
+					{
+						//make this doctor the best pick if they have fewer shifts in the shift type category than the current best pick
+						if (availableDoctors[k].shift_type[shiftType] <= bestPick.shift_type[shiftType])  //this should be comparing two ints
+						{
+							bestPick = availableDoctors[k];
+						}	
+						else if (availableDoctors[k].shift_type[shiftType] == bestPick.shift_type[shiftType])
+						{
+							//if they have the same number of shifts of this type, take the one with less overall shifts
+							if (availableDoctors[k].shift_count < bestPick.shift_count)
+							{
+								bestPick = availableDoctors[k];
+							}
+						}
+					}	
+				}
+
+				//assign the best employee to the current shift and update all the employee variables necessary like shift count, shift type, and hours count 
+				employeeSchedule[currShift] = bestPick.getEmpl_id();
+				bestPick.shift_count += 1;
+				bestPick.shift_type[shiftType] += 1;  //increment the number of shifts of that type the employee has
+
+				if (shiftType == 2)
+				{
+					bestPick.hours_count += 12;
+				}
+				else 
+				{
+					bestPick.hours_count += 8;
 				}
 			}
 
 		}
 
-		
-
-		//need to calculate and schedule all other shifts (mod: 1,2,4,5,7,8,10,11,13,14,15,16,17,18)
-		//cannot schedule someone the same day or night before their attending week
-		//generally want 2 weekend shifts, 3-4 afternoon shifts, and 3-4 night shifts
-		//shifts are picked based on availability and then number of shifts worked of that type. person that is most free and has least shifts will be picked
-		//
+		//assign a moonlighter to all unfilled shifts
+		//assign a moonlighter instead if someone has a constraint infringed upon and there haven't been too many moonlighters assigned
 		
 		
 		return 0;
@@ -221,5 +256,5 @@ public class Schedule {
 
 		return available;  //should contain every employee with a 3 
 	}
-	
+
 }
