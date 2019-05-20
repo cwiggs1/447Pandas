@@ -44,28 +44,6 @@ public class PeoplePeeker extends JSplitPane {
     	this.setLeftComponent(peopleList);
     	this.setRightComponent(peopleData);
     	
-    	
-    	/*//code to add tabs
-    	JTextArea ta=new JTextArea(200,200);  
-        JPanel p1=new JPanel();  
-        p1.add(ta);  
-        JPanel p2=new JPanel();  
-        JPanel p3=new JPanel();  
-        JTabbedPane tp=new JTabbedPane();  
-        //tp.setBounds(50,50,200,200);  
-        
-        //text for the tabs
-        tp.add("main",p1);  
-        tp.add("visit",p2);  
-        tp.add("help",p3);    
-        tp.setVisible(true);
-        //add tabs to view
-        add(tp);  
-        setSize(100,100);  
-        setLayout(null);  
-        setVisible(true);  */
-    	
-    
     } 
     
     
@@ -105,11 +83,14 @@ public class PeoplePeeker extends JSplitPane {
     	dtm.setValueAt("Moonlighter", 2, 0);
     	dtm.setValueAt("Hour Count", 3, 0);
     	dtm.setValueAt("Shift Count", 4, 0);
+    	
 
     	dtm.setValueAt(empl.getEmpl_id(), 0, 1);
     	dtm.setValueAt(empl.getName(), 1, 1);
     	dtm.setValueAt((empl.isMoonlighter() ? "True" : "False") , 2, 1);
     	dtm.setValueAt(empl.getShift_count(), 4, 1);
+    	
+    	
     	
     	peopleData.addTab(empl.getName(), DataTbl);
     }

@@ -57,6 +57,7 @@ import javax.swing.text.DefaultEditorKit;
 import java.io.*;
 import java.util.ArrayList;
 //import java.nio.*;
+import java.util.Date;
 
 
 
@@ -68,7 +69,7 @@ public class Scheduler {
      */
 	static JFrame topFrame;
 	public ButtonGroup mainButtons;
-	public Schedule sched; 
+	public static Schedule sched; 
 	
 	static class SchedulerMenu extends JMenuBar {
 		
@@ -210,17 +211,12 @@ public class Scheduler {
 	}
 	
 	
-	private void loadMainButtons() {
-		JButton runAlgo = new JButton("Generate Schedule");
-		JButton addEmpl = new JButton("Add Employee");
-		
-		mainButtons.add(runAlgo);
-		mainButtons.add(addEmpl);
-		
-		
+	public JDialog createSchedule() {
+		JDialog schedDial = new JDialog();
+		DateSelectPane dsp = new DateSelectPane();
+		schedDial.add(dsp);
+		return schedDial;
 	}
-	
-	
 	
     private static void createAndShowGUI() {
         //Create and set up the window.
@@ -242,6 +238,10 @@ public class Scheduler {
         pplPeekPanel.setVisible(true);
         
         MainButtons mainButt = new MainButtons();
+        mainButt.setEmpls(test_empls);
+        mainButt.setStartDate(new Date());
+        mainButt.setSched(sched);
+        //mainButt.setStartDate(sched.startDate);
         mainButt.setVisible(true);
         
         JPanel mainPanel = new JPanel(); 

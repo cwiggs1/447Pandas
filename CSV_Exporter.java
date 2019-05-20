@@ -48,12 +48,12 @@ public class CSV_Exporter{
       writer.writeNext(header);
 
       DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-      SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+      DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("h:mm a");
 
       //This for loop assumes that the event times match the schedule dates...
       String start_time, end_time, start_date, end_date;
       for (int i = events.length - 1; i >= 0; i--) {
-
+    	  
         //check to see if the current event belongs to this employee
         if (events[i].getEmploy_id() != currEmploys[e].getEmpl_id()) {
           System.out.println("This event - "+ events[i].getShift_id() +" - does not match the Employee, " +currEmploys[e].getName());
@@ -65,14 +65,12 @@ public class CSV_Exporter{
         */
 
         //'*1000' converts it to milliseconds from seconds
-        
-        /*
-        start_time = (events[i].getStartTime(startDate, i)).format(timeFormat);
-        start_date = (events[i].getStartTime(startDate, i)).format(dateFormat);
+        start_time = events[i].getStartDateTime().format(timeFormat);
+        start_date = events[i].getStartDateTime().format(dateFormat);
 
-        end_time = (events[i].getStartTime(startDate, i)).format(timeFormat);
-        end_date = (events[i].getStartTime(startDate, i)).format(dateFormat);
-        */
+        end_time = events[i].getStartDateTime().format(timeFormat);
+        end_date = events[i].getStartDateTime().format(dateFormat);
+        
         
         
         /*
@@ -81,11 +79,11 @@ public class CSV_Exporter{
 
         //assumes that the location array is the same length as the event array
         
-        /*
-        String[] line = {events[i].Subject, start_date, start_time, end_date, end_time, events[i].Description,
-          locations[i].Name};
+        
+        String[] line = {Integer.toString(events[i].getEmploy_id()) + " Working", start_date, start_time, end_date, end_time, " ",
+          locations[i].name};
           writer.writeNext(line);
-          */
+          
 
         }
 

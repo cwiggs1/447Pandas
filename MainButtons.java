@@ -5,6 +5,9 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -28,6 +31,8 @@ public class MainButtons extends JPanel
 	static final protected String CANCEL = "Cancel";
 	
 	protected ArrayList<Employee> empls;
+	protected Date startDate;
+	protected Schedule sched;
 	
 	MainButtons() {
 		
@@ -62,13 +67,21 @@ public class MainButtons extends JPanel
 		this.empls = empls;
 	}
 	
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	
+	public void setSched(Schedule sched) {
+		this.sched = sched;
+	}
+	
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
         //int retVal = 0;
         
         switch (command) {
         case ALGO_COMM:
-        	//generate(
+        	sched.generate();
         	break;
         case EMPL_COMM:
         	//JOptionPane.showInputDialog(this, "uhhh");
@@ -85,30 +98,57 @@ public class MainButtons extends JPanel
 	
 	public JDialog createAddEmplDialog() {
 		JDialog emplDialog = new JDialog();
-		//emplDialog.setLayout(new BoxLayout(emplDialog, BoxLayout.X_AXIS));
+		JButton enter = new JButton(ENTER);
+		JButton cancel = new JButton(CANCEL);
+		String moonOpts [] = {"Yes", "No"};
+		JComboBox moon = new JComboBox(moonOpts);
+		JPanel emplPanel = new JPanel();
+		JPanel acceptPane = new JPanel(new FlowLayout());
+		
 		emplDialog.setSize(200, 200);
-		JPanel textEntries = new JPanel();
+		JPanel textEntries = new JPanel(new FlowLayout());
+		JPanel selectEntries = new JPanel();
 		textEntries.setLayout(new BoxLayout(textEntries, BoxLayout.Y_AXIS));
 		textEntries.setBorder(BorderFactory.createDashedBorder(Color.BLACK));
 		
 		JTextField firstName = new JTextField(10);
 		JLabel firstLbl = new JLabel("First Name:");
-		firstLbl.setLabelFor(firstName);
-		//firstName.add(firstLbl);
-		
 		JTextField lastName = new JTextField(10);
 		JLabel lastLbl = new JLabel("Last Name:");
-		lastLbl.setLabelFor(lastName);
-		//lastName.add(lastLbl);
-		//JCheckBox canMoonlight = new JCheckBox();
+		JLabel moonLbl = new JLabel("Can Moonlight: ");
+		
+		textEntries.add(firstLbl);
 		textEntries.add(firstName);
+		textEntries.add(lastLbl);
 		textEntries.add(lastName);
+		textEntries.add(moonLbl);
+		textEntries.add(moon);
 		
-		emplDialog.add(textEntries);
+		emplPanel.add(textEntries, BorderLayout.CENTER);
 		
-		//emplDialog.add(firstName);
-		//emplDialog.add(lastName);
-		//emplDialog.add(canMoonlight);
+	 	class EnterCancelListener implements ActionListener {
+    		public void actionPerformed(ActionEvent e) {
+    			String comm = e.getActionCommand();
+    			
+    			switch (comm) {
+    			case ENTER:	
+    				Boolean moonlight = (moon.getSelectedIndex() == 0 ? true : false); 
+    				
+    				empls.add(new Employee(empls.size(), firstName.getText() + " " + lastName.getText(), moonlight));
+    				emplDialog.setVisible(false);
+    				break;
+    			case CANCEL:
+    				emplDialog.setVisible(false);
+    				break;
+    			}
+    		}
+    	}
+        acceptPane.add(enter);
+		acceptPane.add(cancel);
+	 	
+		emplPanel.add(acceptPane, BorderLayout.SOUTH);
+		
+	 	emplDialog.add(emplPanel);
 		
 		return emplDialog;
 	}
@@ -116,18 +156,23 @@ public class MainButtons extends JPanel
 	
 	
 	
-	
-	
 	public JDialog createAddConstDialog() {
 		JDialog constDialog = new JDialog();
+		constDialog.setSize(700, 300);
 		
 		JPanel constPanel = new JPanel();
 		constPanel.setSize(200, 200);
 		JPanel cards = new JPanel();
 		JPanel comboPane = new JPanel(new FlowLayout());
 		JPanel singleCon = new JPanel(new FlowLayout());
+		DateSelectPane dsp = new DateSelectPane();
 		JPanel weeklyCon = new JPanel();
-		JOptionPane affirmOpts;
+		
+		JPanel acceptPane = new JPanel(new FlowLayout());
+		JButton enter = new JButton(ENTER);
+		JButton cancel = new JButton(CANCEL);
+		
+		//JOptionPane affirmOpts;
 		
 		constPanel.setLayout(new BorderLayout());
 		cards.setLayout(new CardLayout());
@@ -157,26 +202,20 @@ public class MainButtons extends JPanel
         
 		
         String constNumType[] = {"3", "2", "1", "0"};
-        String weekdays[] = {"Sun", "Mon", "Tue","Wed","Thu","Fri","Sat"};
+        String weekdays[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
         
         String dayCol[] = {"Shifts"};
-        String days[] = new String[31];
-        String months[] = new String[12];
-        for (int i = 0; i < 31; i++) {
-        	days[i] = Integer.toString(i + 1);
-        }
-        for (int i = 0; i < 12; i++) {
-        	months[i] = Integer.toString(i + 1);
-        }
         
         String weekConstLabels[] = {"Weekday", "Morning", "Evening", "Night"}; 
         String singConstLabels[] = {"Date", "Morning", "Evening", "Night"};
         JComboBox constNum = new JComboBox(constNumType);
         
+        
+        
         // Defining single constraint content
         DefaultTableModel singModel = new DefaultTableModel(null, weekdays);
         singModel.setColumnCount(2);
-        singModel.setRowCount(4);
+        singModel.setRowCount(3);
         JTable singDayTbl = new JTable(singModel);
         
         TableColumn singCol = singDayTbl.getColumnModel().getColumn(1);
@@ -184,35 +223,18 @@ public class MainButtons extends JPanel
 
         DefaultTableCellRenderer singRenderer =
                 new DefaultTableCellRenderer();
-        singRenderer.setToolTipText("Click for combo box");
+        singRenderer.setToolTipText("3: Completely available; 2: Prefer not to; "
+        		+ "1: Really prefer not to; 0: Completely unavailable");
         singCol.setCellRenderer(singRenderer);
         
-        for (int i = 0; i < 4; i++) {
-        	singModel.setValueAt(singConstLabels[i], i, 0 );
+        for (int i = 0; i < 3; i++) {
+        	singModel.setValueAt(singConstLabels[i + 1], i, 0);
+        	singModel.setValueAt("3", i, 1);
         }
-        
-        JComboBox dayBox = new JComboBox(days);
-        dayBox.setActionCommand("DAY");
-        JComboBox monthBox = new JComboBox(months);
-        monthBox.setActionCommand("MONTH");
         
         
         singleCon.add(singDayTbl);
-        singleCon.add(new JLabel("Day: "));
-        singleCon.add(dayBox);
-        singleCon.add(new JLabel("Month: "));
-        singleCon.add(monthBox);
-        
-        
-        ActionListener al = new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		String comm = e.getActionCommand();
-        		singModel.setValueAt(monthBox.getSelectedItem() + "/" + dayBox.getSelectedItem(), 0, 1);
-        	}
-        };
-        dayBox.addActionListener(al);
-        monthBox.addActionListener(al);
-		singModel.setValueAt(monthBox.getSelectedItem() + "/" + dayBox.getSelectedItem(), 0, 1);        
+        singleCon.add(dsp);
         
         
         
@@ -238,7 +260,7 @@ public class MainButtons extends JPanel
         	for (int j = 1; j < 8; j++) {
         		if (i == 0) {
         			dtm.setValueAt(weekdays[j - 1], i, j);
-        		} else if (i == 2 && j > 5) {
+        		} else if (i == 2 && (j == 1 || j == 7)) {
         			dtm.setValueAt("N/A", i, j);
         		} else {
         			dtm.setValueAt("3", i, j);
@@ -254,73 +276,122 @@ public class MainButtons extends JPanel
         constPanel.add(comboPane, BorderLayout.PAGE_START);
         constPanel.add(cards, BorderLayout.CENTER);
         
-
-        String options [] = {ENTER, CANCEL};
-		affirmOpts = new JOptionPane(constPanel,
-                JOptionPane.QUESTION_MESSAGE,
-                JOptionPane.YES_NO_OPTION,
-                null,
-                options,
-                options[0]);
+    	class EnterCancelListener implements ActionListener {
+    		public void actionPerformed(ActionEvent e) {
+    			String comm = e.getActionCommand();
+    			
+    			switch (comm) {
+    			case ENTER:	
+					Employee constrainer = findEmpl((String) emplBox.getSelectedItem());
+    				if (constTypeBox.getSelectedIndex() == 0) {
+    					//Save Single 
+    					Calendar dateCal = new GregorianCalendar();
+    					dateCal.setTime(dsp.getDate());
+    					int numConsts;
+    					if (dateCal.get(Calendar.DAY_OF_WEEK) == 1 || dateCal.get(Calendar.DAY_OF_WEEK) == 7) {
+    						numConsts = 2;
+    					} else {
+    						numConsts = 3;
+    					}
+    					
+    					int consts[] = new int[numConsts];
+    					for (int i = 0; i < numConsts; i++) {
+    						consts[i] = Integer.parseInt((String) singModel.getValueAt(i, 1));
+    					}
+    					setSingleConst(constrainer, dsp.getDate(), consts);
+    					System.out.println("uh");
+    				} else if (constTypeBox.getSelectedIndex() == 1) {
+    					//Save Weekly
+    					int consts[] = new int[21];
+    					int constMask[] = new int[19];
+    					int maskOutIdices[] = {7, 13};
+    					
+    					
+    					for (int i = 0; i < 7; i++) {
+    						for (int j = 0; j < 3; j++) {
+    							if (!((i == 0 || i == 6) && j == 1) ) {
+    								consts[j * 7 + i] = Integer.parseInt((String) dtm.getValueAt(j + 1, i + 1));
+    							}
+    						}
+    					}
+    					
+    					for (int i = 0, mask_count = 0; i < 21; i++) {
+    						if (i != maskOutIdices[0] && i != maskOutIdices[1]) {
+    							constMask[mask_count] = consts[i];
+    							mask_count++;
+    						}
+    					}
+    					
+    					setWeeklyConst(constrainer, constMask);
+    					
+    				}
+    				
+    				constDialog.setVisible(false);
+    				break;
+    			case CANCEL:
+    				constDialog.setVisible(false);
+    				break;
+    			}
+    		}
+    	}
+    	
         
         
-		constDialog.setContentPane(affirmOpts);
-		
-        //constDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        constDialog.addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent we) {
-                    affirmOpts.setValue(JOptionPane.CLOSED_OPTION);
-            }
-        });
+        enter.addActionListener(new EnterCancelListener());
+        cancel.addActionListener(new EnterCancelListener());
+        acceptPane.add(enter);
+		acceptPane.add(cancel);
         
-        
-        PropertyChangeListener pcl = new PropertyChangeListener() {
-        
-            public void propertyChange(PropertyChangeEvent e) {
-                String prop = e.getPropertyName();
-
-                if (isVisible()
-                 && (e.getSource() == affirmOpts)
-                 && (affirmOpts.VALUE_PROPERTY.equals(prop) ||
-                     affirmOpts.INPUT_VALUE_PROPERTY.equals(prop))) {
-                    Object value = affirmOpts.getValue();
-
-                    if (value == affirmOpts.UNINITIALIZED_VALUE) {
-                        //ignore reset
-                        return;
-                    }
-
-                    //Reset the affirmOpts's value.
-                    //If you don't do this, then if the user
-                    //presses the same button next time, no
-                    //property change event will be fired.
-                    affirmOpts.setValue(affirmOpts.UNINITIALIZED_VALUE);
-
-                    if (ENTER.equals(value)) {
-
-                    	if (constTypeBox.getSelectedItem().equals(SINGLE_CON_PANEL)) {
-                    		
-                    		empls.get(emplBox.getSelectedIndex());
-                    		System.out.println("Single constraint saved!");
-                    	} else if (constTypeBox.getSelectedItem().equals(WEEK_CON_PANEL)) {
-                    		
-                    		empls.get(emplBox.getSelectedIndex());
-                    		System.out.println("Weekly constraint saved!");
-                    	}
-                    	
-                    	
-                    	constDialog.setVisible(false);
-                    } else if (CANCEL.equals(value)) { //user closed dialog or clicked cancel
-                        constDialog.setVisible(false);
-                    }
-                }
-            }
-        	
-        };
+		constPanel.add(acceptPane, BorderLayout.PAGE_END);
+		constDialog.add(constPanel);
 		
         return constDialog;
 	}
 	
 	
+	public Employee findEmpl(String emplName) {
+		for (int i = 0; i < empls.size(); i++) {
+			if (empls.get(i).getName().equals(emplName)) {
+				return empls.get(i);
+			}
+		}
+		return new Employee(0, "", false);
+	}
+	
+	
+	public void setSingleConst(Employee empl, Date date, int[] consts) {
+		Calendar dateCal = new GregorianCalendar();
+		Calendar startCal = new GregorianCalendar();
+		dateCal.setTime(date);
+		startCal.setTime(startDate);
+		int diff = dateCal.get(Calendar.DAY_OF_YEAR) - startCal.get(Calendar.DAY_OF_YEAR);
+		if (diff < 0) {
+			diff = dateCal.get(Calendar.DAY_OF_YEAR) + (startCal.getActualMaximum(Calendar.DAY_OF_YEAR) - startCal.get(Calendar.DAY_OF_YEAR));
+		}
+		
+		int weeksApart = diff / 7;
+		int daysApart = diff % 7;
+		
+		int priorityIdx = weeksApart * 19 + ((daysApart < 5) ? daysApart * 3 : 15 + (daysApart - 4) * 2);
+		
+		int numConsts;
+		if (dateCal.get(Calendar.DAY_OF_WEEK) == 1 || dateCal.get(Calendar.DAY_OF_WEEK) == 7) {
+			numConsts = 2;
+		} else {
+			numConsts = 3;
+		}
+		for (int i = 0; i < numConsts; i++) {
+			empl.setPriority(priorityIdx, consts[i]);
+		}
+		
+	}
+	
+	public void setWeeklyConst(Employee empl, int[] consts) {
+		for (int i = 0; i < 13; i++) {
+			for (int j = 0; j < 19; j++) {
+				empl.setPriority(i * 19 + j, consts[j]);
+			}
+		}
+	}
 	
 }
