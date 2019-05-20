@@ -33,7 +33,7 @@ public class AttendingWeek {
 
         //assign them the earliest shift they can work
         double emplConstraints[] = new double[employees.size()];
-        ArrayList<Employee> free = new ArrayList<Employee>();
+        ArrayList<Employee> free = new ArrayList<Employee>(employees.size());
         Employee leastConstrained = employees.get(0);
         double lowestConstraint = 0;  //initialize to highest value
         boolean noFree = false;

@@ -17,6 +17,12 @@ public class Schedule {
 		this.name = name;
 		this.startDate = start;
 		this.endDate = end;
+		ArrayList<Employee> test_empls = new ArrayList<Employee>();
+        test_empls.add(new Employee(0, "Arthur Dent", false));
+        test_empls.add(new Employee(1, "Ford Prefect", true));
+        this.employees = test_empls;
+        this.shifts = new ArrayList<Shift>(TOTALSHIFTS);
+        
 	}
 	
 	

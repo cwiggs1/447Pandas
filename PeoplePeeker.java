@@ -119,12 +119,5 @@ public class PeoplePeeker extends JSplitPane {
         }
     }
     
-    
-     //Main Method 
-    /*public static void main(String args[]) 
-    { 
-   
-        // calling the constructor 
-        new PeoplePeeker(); 
-    } */
+
 }

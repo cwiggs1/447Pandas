@@ -136,6 +136,9 @@ public class Scheduler {
 		  	
 		  	  JMenuItem saveMenuItem = new JMenuItem("Save");
 		  	  saveMenuItem.setActionCommand("Save");
+		  	  
+		  	  JMenuItem refreshPpl = new JMenuItem("Refresh");
+		  	  
 		  	
 		  	  JMenuItem exitMenuItem = new JMenuItem("Exit");
 		  	  exitMenuItem.setActionCommand("Exit");
@@ -185,7 +188,8 @@ public class Scheduler {
 	           
 	           switch (command) {
 	           	   case "New":
-	           		   
+	           		   JDialog newDialog = createInitDialog();
+	           		   newDialog.setVisible(true);
 	           		   break;
 	           
 		           case "Open":
@@ -216,7 +220,7 @@ public class Scheduler {
         JPanel initPanel = new JPanel();
         JPanel acceptPane = new JPanel(new FlowLayout());
         initPanel.add(new JLabel("Please enter the Schedule Starting Date (Schedule currently"
-        		+ " defaults to 13 weeks long"), BorderLayout.PAGE_START);
+        		+ " defaults to 13 weeks long)"), BorderLayout.PAGE_START);
         DateSelectPane initDate = new DateSelectPane();
         initPanel.add(initDate, BorderLayout.CENTER);
         JDialog initDialog = new JDialog();
@@ -236,7 +240,7 @@ public class Scheduler {
     				initDialog.setVisible(false);
     				break;
     			case "Cancel":
-    			initDialog.setVisible(false);
+    				initDialog.setVisible(false);
     				break;
     			}
     		}
@@ -248,6 +252,8 @@ public class Scheduler {
 		initPanel.add(acceptPane);
 		
 		initDialog.add(initPanel);
+		initDialog.setSize(600, 150);
+		
         return initDialog;
 	}
 	
@@ -256,25 +262,32 @@ public class Scheduler {
         topFrame = new JFrame("Scheduler");
         topFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        JDialog initDialog = createInitDialog();
-        initDialog.setVisible(true);
-        
+        sched = new Schedule("Schedule", new Date(), new Date());
         DayDetailCalendar cal = new DayDetailCalendar();
         WeekTable weekTbl = cal.wt;
+        weekTbl.setSched(sched);
         cal.setSize(300, 200);
         cal.setVisible(true);
         
         //weekTbl.setSize(50, 50);
- 
-        ArrayList<Employee> test_empls = new ArrayList<Employee>();
-        test_empls.add(new Employee(69, "Arthur Dent", false));
-        test_empls.add(new Employee(420, "Ford Prefect", true));
+
+        JPanel pplPeekPanel = new JPanel();
+        PeoplePeeker pplPeek = new PeoplePeeker(sched.employees);
+        pplPeekPanel.add(pplPeek, BorderLayout.CENTER);
+        JButton pplRefresh = new JButton("Refresh People List");
+        pplRefresh.setActionCommand("REFRESH");
+        pplRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String comm = e.getActionCommand();
+				pplPeekPanel.remove(pplPeek);
+				pplPeekPanel.add(new PeoplePeeker(sched.employees));
+			}
+		});
         
-        PeoplePeeker pplPeekPanel = new PeoplePeeker(test_empls);
         pplPeekPanel.setVisible(true);
         
         MainButtons mainButt = new MainButtons();
-        mainButt.setEmpls(test_empls);
+        mainButt.setEmpls(sched.employees);
         mainButt.setStartDate(new Date());
         mainButt.setSched(sched);
         //mainButt.setStartDate(sched.startDate);
@@ -291,15 +304,15 @@ public class Scheduler {
         topFrame.setJMenuBar(menu.createMenuBar());
         mainPanel.setVisible(true);
         topFrame.getContentPane().add(mainPanel, BorderLayout.CENTER);
-        //topFrame.getContentPane().add(menu.getStatusBar(), BorderLayout.SOUTH);
-        topFrame.getContentPane().add(new JLabel("Welcome to the Scheduler!"), BorderLayout.PAGE_START);
-      
-        
+        topFrame.getContentPane().add(new JLabel("Welcome to the Scheduler!"), BorderLayout.PAGE_START);        
         
         //Display the window.
         topFrame.pack();
         topFrame.setSize(1000, 720);
         topFrame.setVisible(true);
+        JDialog initDialog = createInitDialog();
+        initDialog.setVisible(true);
+        
     }
  
     public static void main(String[] args) {

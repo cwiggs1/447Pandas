@@ -32,7 +32,7 @@ public class MainButtons extends JPanel
 	
 	protected ArrayList<Employee> empls;
 	protected Date startDate;
-	protected Schedule sched;
+	static protected Schedule sched;
 	
 	MainButtons() {
 		
@@ -81,7 +81,9 @@ public class MainButtons extends JPanel
         
         switch (command) {
         case ALGO_COMM:
-        	sched.generate();
+        	if (sched != null) {
+        		sched.generate();
+        	}
         	break;
         case EMPL_COMM:
         	createAddEmplDialog().setVisible(true);
@@ -90,6 +92,11 @@ public class MainButtons extends JPanel
         	createAddConstDialog().setVisible(true);
         	break;
         case CSV_COMM:
+        	Employee empls[] = new Employee[sched.employees.size()];
+        	Shift shifts[] = new Shift[sched.shifts.size()];
+        	Location locs[] = {new Location()};
+        	
+        	CSV_Exporter csv = new CSV_Exporter(sched.employees.toArray(empls), sched.shifts.toArray(shifts), locs, sched.startDate, 1);
         	break;
         }
            
