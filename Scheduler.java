@@ -46,6 +46,7 @@
 package scheduler;
  
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -211,17 +212,52 @@ public class Scheduler {
 	}
 	
 	
-	public JDialog createSchedule() {
-		JDialog schedDial = new JDialog();
-		DateSelectPane dsp = new DateSelectPane();
-		schedDial.add(dsp);
-		return schedDial;
+	public static JDialog createInitDialog() {
+        JPanel initPanel = new JPanel();
+        JPanel acceptPane = new JPanel(new FlowLayout());
+        initPanel.add(new JLabel("Please enter the Schedule Starting Date (Schedule currently"
+        		+ " defaults to 13 weeks long"), BorderLayout.PAGE_START);
+        DateSelectPane initDate = new DateSelectPane();
+        initPanel.add(initDate, BorderLayout.CENTER);
+        JDialog initDialog = new JDialog();
+       
+        
+		JButton enter = new JButton("Enter");
+		JButton cancel = new JButton("Cancel");
+        enter.setActionCommand("Enter");
+        cancel.setActionCommand("Cancel");
+	 	class EnterCancelListener implements ActionListener {
+    		public void actionPerformed(ActionEvent e) {
+    			String comm = e.getActionCommand();
+    			
+    			switch (comm) {
+    			case "Enter":	
+    				sched = new Schedule("Schedule", initDate.getDate(), initDate.getDateAfter(13));
+    				initDialog.setVisible(false);
+    				break;
+    			case "Cancel":
+    			initDialog.setVisible(false);
+    				break;
+    			}
+    		}
+    	}
+	 	enter.addActionListener(new EnterCancelListener());
+	 	cancel.addActionListener(new EnterCancelListener());
+        acceptPane.add(enter);
+		acceptPane.add(cancel);
+		initPanel.add(acceptPane);
+		
+		initDialog.add(initPanel);
+        return initDialog;
 	}
 	
     private static void createAndShowGUI() {
         //Create and set up the window.
         topFrame = new JFrame("Scheduler");
         topFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        JDialog initDialog = createInitDialog();
+        initDialog.setVisible(true);
         
         DayDetailCalendar cal = new DayDetailCalendar();
         WeekTable weekTbl = cal.wt;

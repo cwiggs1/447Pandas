@@ -84,7 +84,6 @@ public class MainButtons extends JPanel
         	sched.generate();
         	break;
         case EMPL_COMM:
-        	//JOptionPane.showInputDialog(this, "uhhh");
         	createAddEmplDialog().setVisible(true);
         	break;
         case CONST_COMM:
@@ -133,7 +132,6 @@ public class MainButtons extends JPanel
     			switch (comm) {
     			case ENTER:	
     				Boolean moonlight = (moon.getSelectedIndex() == 0 ? true : false); 
-    				
     				empls.add(new Employee(empls.size(), firstName.getText() + " " + lastName.getText(), moonlight));
     				emplDialog.setVisible(false);
     				break;
@@ -143,6 +141,8 @@ public class MainButtons extends JPanel
     			}
     		}
     	}
+	 	enter.addActionListener(new EnterCancelListener());
+	 	cancel.addActionListener(new EnterCancelListener());
         acceptPane.add(enter);
 		acceptPane.add(cancel);
 	 	

@@ -66,6 +66,15 @@ public class DateSelectPane extends JPanel {
 		return cal.getTime();
 	}
 	
+	public Date getDateAfter(int numWeeks) {
+		Calendar cal = new GregorianCalendar();
+		cal.set(Integer.parseInt((String)yearBox.getSelectedItem()), 
+				Integer.parseInt((String)monthBox.getSelectedItem()),
+				Integer.parseInt((String)dayBox.getSelectedItem()));
+		cal.add(Calendar.DAY_OF_YEAR, 7 * numWeeks);
+		return cal.getTime();
+	}
+	
 	
 	class BoxListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
