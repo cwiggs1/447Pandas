@@ -17,26 +17,48 @@ public class Schedule {
 		this.name = name;
 		this.startDate = start;
 		this.endDate = end;
+
+		/*
 		ArrayList<Employee> test_empls = new ArrayList<Employee>();
-        test_empls.add(new Employee(0, "Arthur Dent", false));
-        test_empls.add(new Employee(1, "Ford Prefect", true));
-        this.employees = test_empls;
-        this.shifts = new ArrayList<Shift>(TOTALSHIFTS);
-        
+		test_empls.add(new Employee(0, "Arthur Dent", false));
+		test_empls.add(new Employee(1, "Ford Prefect", true));
+		this.employees = test_empls;
+		this.shifts = new ArrayList<Shift>(TOTALSHIFTS);
+		*/
+
+		int i = 0;
+		ArrayList<Employee> test_employs = new ArrayList<Employee>();
+		Scanner keyboard = new Scanner(System.in);
+		Random rand = new Random();
+		Employee currEmploy;
+		int getInt;
+
+		while (keyboard != 0) {
+				getInt = rand.nextInt(6);
+				currEmploy = new Employee(keyboard, "Test #" + i, false);
+				test_employs.add(currEmploy);
+		}
+
+		generate();
+
+		for (int j = 0; j < 274; j++) {
+			System.out.println("Shift #" + j + "Employ_id =" + shifts[j].getEmpl_id);
+		}
+
 	}
-	
-	
+
+
 	public int generate() {
-		
+
 		//algo goes here
 		int[] employeeSchedule = new int[TOTALSHIFTS];  //employee ID for each shift of the entire period (essentially the schedule)
 
 		//do attending week shifts
-		
+
 		AttendingWeek aw = new AttendingWeek();
 		Employee[] awDoctors = new Employee[WEEKSPERPERIOD];
 		awDoctors = getEmployeeArray(aw.ScheduleAttendingWeeks(employees));  //getAllIDs gives the attending week algorithm an array of all employees
-		
+
 		int[] awIndex = new int[WEEKSPERPERIOD * 5]; //an array of the index of all morning weekday shifts in employeeSchedule
 		int[] afIndex = new int[WEEKSPERPERIOD * 5];  //index of all afternoon shifts within the 274
 		int[] evIndex = new int[WEEKSPERPERIOD * 5];  //index of all evening shifts within the 274
@@ -53,7 +75,7 @@ public class Schedule {
 		for (int i = 0; i < (WEEKSPERPERIOD * 5); i++)
 		{
 			employeeSchedule[awIndex[i]] = awDoctors[weekCount].getEmpl_id();  //every time a doctor is put into employee schedule their shift count and hour count should be increased
-			awDoctors[weekCount].setShift_count(awDoctors[weekCount].getShift_count() + 1);  
+			awDoctors[weekCount].setShift_count(awDoctors[weekCount].getShift_count() + 1);
 			awDoctors[weekCount].setHours_count(awDoctors[weekCount].getHours_count() + 8);  //aw shifts are always 8 hour morning shifts
 
 			if (i % 5 == 4)  //after every fifth shift (friday) is assigned, increment the week count
@@ -115,7 +137,7 @@ public class Schedule {
 
 				moonlighterCount += 1;
 			}
-			else  //search through available doctors and pick one based on how many shifts they have 
+			else  //search through available doctors and pick one based on how many shifts they have
 			{
 				for (int k = 0; k < availableDoctors.size(); k++)
 				{
@@ -125,23 +147,23 @@ public class Schedule {
 						//not considered in bestPick
 						continue;
 					}
-					else 
+					else
 					{
 						//make this doctor the best pick if they have fewer shifts in the shift type category than the current best pick
 						if (availableDoctors.get(k).getShiftType()[shiftType] <= bestPick.getShiftType()[shiftType])  //this should be comparing two ints
 						{
 							bestPick = availableDoctors.get(k);
-						}	
+						}
 						else if (availableDoctors.get(k).getShiftType()[shiftType] == bestPick.getShiftType()[shiftType]) {
 							//if they have the same number of shifts of this type, take the one with less overall shifts
 							if (availableDoctors.get(k).getShift_count() < bestPick.getShift_count()) {
 								bestPick = availableDoctors.get(k);
 							}
 						}
-					}	
+					}
 				}
 
-				//assign the best employee to the current shift and update all the employee variables necessary like shift count, shift type, and hours count 
+				//assign the best employee to the current shift and update all the employee variables necessary like shift count, shift type, and hours count
 				employeeSchedule[currShift] = bestPick.getEmpl_id();
 				bestPick.setShift_count(bestPick.getShift_count() + 1);
 				bestPick.getShiftType()[shiftType] += 1;  //increment the number of shifts of that type the employee has
@@ -188,7 +210,7 @@ public class Schedule {
 				bestPick.setShift_count(bestPick.getShift_count() - 1);
 				bestPick.getShiftType()[shiftType] -= 1;  //increment the number of shifts of that type the employee has
 
-				
+
 
 				//assign a moonlighter
 				for(i = 0; i < allMoonlighters.size(); i++)
@@ -199,7 +221,7 @@ public class Schedule {
 					}
 				}
 
-				//assign the best employee to the current shift and update all the employee variables necessary like shift count, shift type, and hours count 
+				//assign the best employee to the current shift and update all the employee variables necessary like shift count, shift type, and hours count
 				employeeSchedule[currShift] = bestPick.getEmpl_id();
 				bestPick.shift_count += 1;
 				bestPick.shift_type[shiftType] += 1;  //increment the number of shifts of that type the employee has
@@ -221,11 +243,11 @@ public class Schedule {
 		{
 			shifts.get(a).setEmploy_id(employeeSchedule[a]);
 		}
-		
+
 		return 0;
 	}
-	
-	
+
+
 	void addEmployee(Employee empl) {
 		employees.add(empl);
 	}
@@ -238,7 +260,7 @@ public class Schedule {
 		{
 			allIDs[i] = employees.get(i);  //sets each spot of allIDs to a different employee ID
 		}
-	
+
 		return allIDs;
 	}
 
@@ -266,7 +288,7 @@ public class Schedule {
 		int count = 0;
 		for (int i = 0; i < TOTALSHIFTS; i++)
 		{
-			//if it is an afternoon weekday shift then add it 
+			//if it is an afternoon weekday shift then add it
 			if ((i % 19 == 1) || (i % 19 == 4) || (i % 19 == 7) || (i % 19 == 10) || (i % 19 == 13))
 			{
 				afIndex[count] = i;
@@ -336,7 +358,7 @@ public class Schedule {
 			if(employees.get(i).getPriority(currShift) == 1)
 			{
 				temp1.add(employees.get(i));  //this temp will be filled with all ones and used as output if the temp2 arraylist is empty
-			}  
+			}
 			//note: availability of 0 is ignored because they will not be scheduled
 		}
 
@@ -350,7 +372,7 @@ public class Schedule {
 			return temp2;  //if there is no 3 availability then return the 2s
 		}
 
-		return available;  //should contain every employee with a 3 
+		return available;  //should contain every employee with a 3
 	}
 
     public ArrayList<Employee> fillMoonlighters(ArrayList<Employee> employees)
