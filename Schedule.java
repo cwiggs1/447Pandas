@@ -26,21 +26,26 @@ public class Schedule {
 		this.shifts = new ArrayList<Shift>(TOTALSHIFTS);
 		*/
 
-		int i = 0;
 		ArrayList<Employee> test_employs = new ArrayList<Employee>();
 		Scanner keyboard = new Scanner(System.in);
 		Random rand = new Random();
 		Employee currEmploy;
 		int getInt;
-		
-		int num = keyboard.nextInt();
 
-		while (num != 0) {
-				getInt = rand.nextInt(6);
-				currEmploy = new Employee(keyboard, "Test #" + i, false);
-				test_employs.add(currEmploy);
-				num = keyboard.nextInt();
+		//one of 3
+		currEmploy = new Employee(333, "Single Test", false);
+		for (int j = 0; j < 274; j++) {
+			currEmploy.setPriority(j, 3);
 		}
+		test_employs.add(currEmploy);
+
+		//random employee
+		currEmploy = new Employee(132, "Random Test", false);
+		getInt = rand.nextInt();
+		for (int i = 0; i < 274; i++) {
+			currEmploy.setPriority(i, getInt);
+		}
+		test_employs.add(currEmploy);
 
 		generate();
 
