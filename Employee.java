@@ -4,12 +4,10 @@
 
 //SAT AND SUN ARE EVENINGS ONLY
 
-package scheduler;
-
 public class Employee {
 
-
-  private int empl_id;
+  private static final int NUM_SHIFTS = 19;
+private int empl_id;
   private String name;
   private boolean moonlighter;
   private int shift_count;
@@ -22,9 +20,8 @@ public class Employee {
   private int num_attending_weeks;
   private double avg_morning_priority;
   private double[] AWconstraints;  //should be 13 doubles with the average priority availability for each week in the period in order
-  static public final int NUM_SHIFTS = 19;
-  static public final int NUM_ATTENDING_WEEKS = 13;
-  
+private int num_attending_week;
+
   public static int weeksPerPeriod = 13;
 
   Employee(int empl_id, String name, boolean moonlighter){
@@ -33,16 +30,16 @@ public class Employee {
     this.moonlighter = moonlighter;
     this.shift_count = 0; //start w/ zero
     this.hours_count = 0; //start w/ zero
-    this.shift_type = new int[3]; //this should initialize all values to 0. index0 is afternoon shifts, index1 is evening, index2 is weekend
+    this.setShift_type(new int[3]); //this should initialize all values to 0. index0 is afternoon shifts, index1 is evening, index2 is weekend
     this.max_hrs = 40;
-    //int NUM_SHIFTS = 19;
-    this.priorites = new int[NUM_SHIFTS * NUM_ATTENDING_WEEKS];
+    int NUM_SHIFTS = 19;
+    this.priorites = new int[NUM_SHIFTS];
     this.avg_priorites = 0;
     this.num_attending_weeks = 0;
     this.avg_morning_priority = 0;
-    //int NUM_ATTENDING_WEEKS = 13;
+    int NUM_ATTENDING_WEEKS = 13;
     this.morning_priorites = new double[NUM_ATTENDING_WEEKS];
-    this.AWconstraints = new double[weeksPerPeriod]; //should set AW constraints to the avg constraint value per week
+    this.AWconstraints = new double[weeksPerPeriod];  //should set AW constraints to the avg constraint value per week
   }
 
   // getters and setters
@@ -62,8 +59,8 @@ public class Employee {
     return morning_priorites[index];
   }
 
-  public int getAvgMorningPriority() {
-    return (int) avg_morning_priority;
+  public double getAvgMorningPriority() {
+    return avg_morning_priority;
   }
 
   public int getHours_count() {
@@ -71,7 +68,7 @@ public class Employee {
   }
 
   public int[] getShiftType() {
-    return shift_type;
+    return getShift_type();
   }
 
   public double getAvgPriority() {
@@ -98,14 +95,6 @@ public class Employee {
     return shift_count;
   }
 
-  public int[] getShift_type() {
-	  return shift_type;
-  }
-  
-  public void setShift_type(int shift_types[]) {
-	  this.shift_type = shift_types;
-  }
-  
   public int[] getPriorites() {
     return priorites;
   }
@@ -123,7 +112,7 @@ public class Employee {
   }
 
   public void setNumAttendingWeek(int num_attending_weeks) {
-    this.num_attending_weeks = num_attending_weeks;
+    this.num_attending_week = num_attending_weeks;
   }
 
   public void setEmpl_id(int empl_id) {
@@ -171,7 +160,7 @@ public class Employee {
     return tempAvg;
   }
 
-  public double setupAttendingAvgPriority() {
+  public void setupAttendingAvgPriority() {
     double tempNumber = 0;
     //for the number of weeks during a scheduling session (13 weeks)
     for (int i = 0; i < 13; i++) {
@@ -180,8 +169,6 @@ public class Employee {
       setMorningPriority(i, tempNumber);
     }
     setAvgMorningPriority((tempNumber / 65));
-    
-    return tempNumber;
   }
 
   public double[] avgContraintPerWeek(double[] constraints) //should set AWconstraints variable in Employee
@@ -189,9 +176,10 @@ public class Employee {
 
     int weekCount = 0;
     double weekTotal = 0;
-    double[] constraintPerWeek = new double[NUM_ATTENDING_WEEKS];  //len should be 13
+    double[] constraintPerWeek = null;  //len should be 13
 
-    for (int i = 0; i < weeksPerPeriod; i++) {
+    int daysPerPeriod = 91;
+	for (int i = 0; i < daysPerPeriod ; i++) {
 
       weekTotal += constraints[i];  
 
@@ -205,5 +193,13 @@ public class Employee {
 
     return constraintPerWeek;
   }
+
+public int[] getShift_type() {
+	return shift_type;
+}
+
+public void setShift_type(int[] shift_type) {
+	this.shift_type = shift_type;
+}
 
 }
