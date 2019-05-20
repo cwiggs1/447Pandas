@@ -26,22 +26,29 @@ public class Schedule {
 		this.shifts = new ArrayList<Shift>(TOTALSHIFTS);
 		*/
 
+		int x = 0;
 		ArrayList<Employee> test_employs = new ArrayList<Employee>();
 		Scanner keyboard = new Scanner(System.in);
 		Random rand = new Random();
 		Employee currEmploy;
 		int getInt;
 
-		//one of 3
+		//one with all 3
 		currEmploy = new Employee(333, "Single Test", false);
 		for (int j = 0; j < 274; j++) {
 			currEmploy.setPriority(j, 3);
 		}
 		test_employs.add(currEmploy);
 
+		generate();
+
+		for (x = 0; x < 274; x++) {
+			System.out.print("Shift #" + x + " Employee ID: " + shifts[x].getEmpl_id());
+		}
+
 		//random employee
 		currEmploy = new Employee(132, "Random Test", false);
-		getInt = rand.nextInt();
+		getInt = rand.nextInt(4);
 		for (int i = 0; i < 274; i++) {
 			currEmploy.setPriority(i, getInt);
 		}
@@ -51,6 +58,22 @@ public class Schedule {
 
 		for (int j = 0; j < 274; j++) {
 			System.out.println("Shift #" + j + "Employ_id =" + shifts[j].getEmpl_id);
+		}
+
+		//three employees with a random weeks
+		for (int k = 1; k < 4; k++) {
+			currEmploy = new Employee(k, "Random Test#" + k, false);
+			getInt = rand.nextInt(4);
+			for(int y = 0; y < 274; i++) {
+				currEmploy.setPriority(y, getInt);
+			}
+			test_employs.add(currEmploy);
+		}
+
+		generate();
+
+		for (x = 0; x < 274; x++) {
+			System.out.print("Shift #" + x + " Employee ID: " + shifts[x].getEmpl_id());
 		}
 
 	}
