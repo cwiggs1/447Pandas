@@ -3,7 +3,7 @@ import java.util.Objects;
 import java.util.ArrayList;
 
 
-public Class AttendingWeek {
+public class AttendingWeek {
 
     public static int daysPerPeriod = 65;
     public static int weeksPerPeriod = 13;
