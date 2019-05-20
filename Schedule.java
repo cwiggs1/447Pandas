@@ -66,7 +66,12 @@ public class Schedule {
 		ArrayList<Employee> availableDoctors;
 		int shiftType = 0;  //afternoon shift is 0, evening is 1, weekend is 2
 		int moonlighterCount = 0;
-		Employee bestPick;
+		Employee bestPick = new Employee(-1, "DUMMY EMPLOYEE", false);
+        Employee currEmpl;
+
+        //assign a moonlighter instead if someone has a constraint infringed upon and there haven't been too many moonlighters assigned
+		ArrayList<Employee> allMoonlighters = fillMoonlighters(employees);
+		int numMoonlighters = 0;
 
 		//this for loop should fill the rest of the shifts in employeeSchedule
 		for (int currShift = 0; currShift < TOTALSHIFTS; currShift++)
@@ -96,11 +101,18 @@ public class Schedule {
 
 			//find all employees availability for this shift (could be empty arraylist if nobody is available)
 			availableDoctors = getAvailability(employees, currShift);
-			bestPick = availableDoctors.get(0);  //initialize bestPick to something, it will start at 0 in the following loop anyways
 
 			if(availableDoctors.isEmpty())
 			{
 				//assign a moonlighter
+                for(int i = 0; i < allMoonlighters.size(); i++)
+				{
+					if (allMoonlighters.get(i).getShift_count() < bestPick.getShift_count())
+					{
+						bestPick = allMoonlighters.get(i);
+					}
+				}
+
 				moonlighterCount += 1;
 			}
 			else  //search through available doctors and pick one based on how many shifts they have 
@@ -144,9 +156,65 @@ public class Schedule {
 
 		}
 
-		//assign a moonlighter to all unfilled shifts
-		//assign a moonlighter instead if someone has a constraint infringed upon and there haven't been too many moonlighters assigned
-		
+		//moonlighter for loop
+		for (int b = 0; b < TOTALSHIFTS; b++)
+		{
+			//assign a moonlighter to any shift with a constraint of 1 if there are enough extra moonlighters
+			if(getPriorities(employeeSchedule[b], employees, b) == 1 && numMoonlighters <= WEEKSPERPERIOD)
+			{
+				//must account for the shift we are taking away from someone else
+				currEmpl = getEmpl(employees, employeeSchedule[b]);
+
+				//figure out the type of shift and decrement hours of employee with shift covered by moonlighter)
+				for(int j = 0; j < (WEEKSPERPERIOD * 5); j++)
+				{
+					if(afIndex[j] == b)  //check afternoon shifts
+					{
+						shiftType = 0;
+						currEmpl.setHours_count(currEmpl.getHours_count() - 8);
+					}
+					else if (evIndex[j] == b)  //check evening shifts
+					{
+						shiftType = 1;
+						currEmpl.setHours_count(currEmpl.getHours_count() - 8);
+					}
+					else  //if it goes thorugh to this else it has checked every weekday shift so it must be weekend
+					{
+						shiftType = 2;
+						currEmpl.setHours_count(currEmpl.getHours_count() - 12);
+					}
+				}
+
+				bestPick.setShift_count(bestPick.getShift_count() - 1);
+				bestPick.getShiftType()[shiftType] -= 1;  //increment the number of shifts of that type the employee has
+
+				
+
+				//assign a moonlighter
+				for(int i = 0; i < allMoonlighters.size(); i++)
+				{
+					if (allMoonlighters.get(i).getShift_count() < bestPick.getShift_count())
+					{
+						bestPick = allMoonlighters.get(i);
+					}
+				}
+
+				//assign the best employee to the current shift and update all the employee variables necessary like shift count, shift type, and hours count 
+				employeeSchedule[b] = bestPick.getEmpl_id();
+				bestPick.setShift_count(bestPick.getShift_count() + 1);
+				bestPick.getShift_type()[shiftType] += 1;  //increment the number of shifts of that type the employee has
+
+				if (shiftType == 2) {
+					bestPick.setHours_count(bestPick.getHours_count() + 12);
+				}
+				else {
+					bestPick.setHours_count(bestPick.getHours_count() + 8);
+				}
+
+				numMoonlighters += 1;
+			}
+		}
+		//moonlighter stuff done
 
 		//put every employee id into the shifts arraylist
 		for (int a = 0; a < shifts.size(); a++)  //shifts.size should be TOTALSHIFTS (274)
@@ -283,6 +351,53 @@ public class Schedule {
 		}
 
 		return available;  //should contain every employee with a 3 
+	}
+
+    public ArrayList<Employee> fillMoonlighters(ArrayList<Employee> employees)
+	{
+		ArrayList<Employee> output = new ArrayList<Employee>();
+
+		//put all possible moonlighters in an ArrayList the is the output of this function
+		for(int i = 0; i < employees.size(); i++)
+		{
+			if(employees.get(i).isMoonlighter())
+			{
+				output.add(employees.get(i));
+			}
+		}
+		
+		return output;
+	}
+
+	public int getPriorities(int id, ArrayList<Employee> employees, int shift)
+	{
+		int[] priorities = new int[TOTALSHIFTS];
+
+		for (int i = 0; i < employees.size(); i++)
+		{
+			if (id == employees.get(i).getEmpl_id())
+			{
+				priorities = employees.get(i).getPriorites();
+				return priorities[shift];
+			}
+		}
+	
+		return priorities[0];
+	}
+
+	//returns an employee given just their id
+	public Employee getEmpl(ArrayList<Employee> employees, int id)
+	{
+		for (int i = 0; i < employees.size(); i++)
+		{
+			if (employees.get(i).getEmpl_id() == id)
+			{
+				return employees.get(i);
+			}
+		}
+		
+		return new Employee(-1, "Dummy", false);
+		
 	}
 
 }

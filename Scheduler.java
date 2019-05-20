@@ -137,7 +137,7 @@ public class Scheduler {
 		  	  JMenuItem saveMenuItem = new JMenuItem("Save");
 		  	  saveMenuItem.setActionCommand("Save");
 		  	  
-		  	  JMenuItem refreshPpl = new JMenuItem("Refresh");
+		  	  //JMenuItem refreshPpl = new JMenuItem("Refresh");
 		  	  
 		  	
 		  	  JMenuItem exitMenuItem = new JMenuItem("Exit");
@@ -272,9 +272,10 @@ public class Scheduler {
         //weekTbl.setSize(50, 50);
 
         JPanel pplPeekPanel = new JPanel();
+        pplPeekPanel.setLayout(new BoxLayout(pplPeekPanel, BoxLayout.Y_AXIS));
         PeoplePeeker pplPeek = new PeoplePeeker(sched.employees);
-        pplPeekPanel.add(pplPeek, BorderLayout.CENTER);
-        JButton pplRefresh = new JButton("Refresh People List");
+        pplPeekPanel.add(pplPeek);
+        /*JButton pplRefresh = new JButton("Refresh People List");
         pplRefresh.setActionCommand("REFRESH");
         pplRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -284,6 +285,7 @@ public class Scheduler {
 			}
 		});
         
+        pplPeekPanel.add(pplRefresh);*/
         pplPeekPanel.setVisible(true);
         
         MainButtons mainButt = new MainButtons();

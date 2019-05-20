@@ -98,6 +98,14 @@ public class Employee {
     return shift_count;
   }
 
+  public int[] getShift_type() {
+	  return shift_type;
+  }
+  
+  public void setShift_type(int shift_types[]) {
+	  this.shift_type = shift_types;
+  }
+  
   public int[] getPriorites() {
     return priorites;
   }

@@ -83,13 +83,22 @@ public class PeoplePeeker extends JSplitPane {
     	dtm.setValueAt("Moonlighter", 2, 0);
     	dtm.setValueAt("Hour Count", 3, 0);
     	dtm.setValueAt("Shift Count", 4, 0);
+    	dtm.setValueAt("Avg Priority", 5, 0);
+    	dtm.setValueAt("Priority List", 6, 0);
     	
 
     	dtm.setValueAt(empl.getEmpl_id(), 0, 1);
     	dtm.setValueAt(empl.getName(), 1, 1);
     	dtm.setValueAt((empl.isMoonlighter() ? "True" : "False") , 2, 1);
+    	dtm.setValueAt(empl.getHours_count(), 3, 1);
     	dtm.setValueAt(empl.getShift_count(), 4, 1);
+    	dtm.setValueAt(empl.getAvgPriority(), 5, 1);
     	
+    	String priorityList = "";
+    	for (int i = 0; i < empl.getPriorites().length; i++) {
+    		priorityList += Integer.toString(empl.getPriority(i)) + ", ";
+    	}
+    	dtm.setValueAt(priorityList, 6, 1);
     	
     	
     	peopleData.addTab(empl.getName(), DataTbl);
