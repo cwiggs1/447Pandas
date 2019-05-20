@@ -1,3 +1,6 @@
+import java.util.*;
+import java.text.*;
+import java.time.*;
 
 public class Driver {
 
@@ -5,6 +8,16 @@ public class Driver {
 		// TODO Auto-generated method stub
 
 		System.out.println("Welcome to Scheduler");
+
+
+		Instant now = Instant.now();
+		ZoneId zoneId = ZoneId.of("America/New_York");
+		ZonedDateTime dateAndTimeInLA = ZonedDateTime.ofInstant(now, zoneId);
+		Date startDate = Date.from(ZonedDateTime.ofInstant(now, zoneId));
+
+		//make Schedule
+		Schedule testSchedule = new Schedule("Test", startDate, startDate);
+
 	}
 
 }
