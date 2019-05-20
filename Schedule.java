@@ -32,11 +32,14 @@ public class Schedule {
 		Random rand = new Random();
 		Employee currEmploy;
 		int getInt;
+		
+		int num = keyboard.nextInt();
 
-		while (keyboard != 0) {
+		while (num != 0) {
 				getInt = rand.nextInt(6);
 				currEmploy = new Employee(keyboard, "Test #" + i, false);
 				test_employs.add(currEmploy);
+				num = keyboard.nextInt();
 		}
 
 		generate();
