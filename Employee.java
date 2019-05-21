@@ -24,7 +24,7 @@ public class Employee {
   private double[] AWconstraints;  //should be 13 doubles with the average priority availability for each week in the period in order
   static public final int NUM_SHIFTS = 19;
   static public final int NUM_ATTENDING_WEEKS = 13;
-  
+
   public static int weeksPerPeriod = 13;
 
   Employee(int empl_id, String name, boolean moonlighter){
@@ -101,16 +101,16 @@ public class Employee {
   public int[] getShift_type() {
 	  return shift_type;
   }
-  
+
   public void setShift_type(int shift_types[]) {
 	  this.shift_type = shift_types;
   }
-  
+
   public int[] getPriorites() {
     return priorites;
   }
 
-  public double[] getAWconstraints() { 
+  public double[] getAWconstraints() {
     return AWconstraints;
   }
 
@@ -165,8 +165,9 @@ public class Employee {
 
   public double loopAttendWeekPriority(int numWeeks) {
     double tempAvg = 0;
-    for (int i = (numWeeks * 19); i <= ((numWeeks * 19) + 15); i += 3) {
+    for (int i = (numWeeks * 19); i <= ((numWeeks * 19) + 12); i += 3) { //+ 12 because it should only go up till Friday
       tempAvg += getPriority(i);
+    //  System.out.println(tempAvg);
     }
     return tempAvg;
   }
@@ -180,12 +181,12 @@ public class Employee {
       setMorningPriority(i, tempNumber);
     }
     setAvgMorningPriority((tempNumber / 65));
-    
+
     return tempNumber;
   }
 
   public double[] avgContraintPerWeek(double[] constraints) //should set AWconstraints variable in Employee
-  { 
+  {
 
     int weekCount = 0;
     double weekTotal = 0;
@@ -193,7 +194,7 @@ public class Employee {
 
     for (int i = 0; i < weeksPerPeriod; i++) {
 
-      weekTotal += constraints[i];  
+      weekTotal += constraints[i];
 
         if (i % 5 == 4)  //if its a friday constraint, take the average and store it in the output array
         {

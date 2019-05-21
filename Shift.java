@@ -1,4 +1,3 @@
-
 package scheduler;
 
 import java.time.*;
@@ -44,11 +43,11 @@ public class Shift {
 	  public LocalDateTime getStartDateTime () {
 		  return StartDateTime;
 	  }
-	  
+
 	  public LocalDateTime getEndDateTime () {
 		  return EndDateTime;
 	  }
-	  
+
 	  public void setEmploy_id(int employ_id) {
 	    this.employ_id = employ_id;
 	  }
@@ -157,9 +156,9 @@ public class Shift {
 	      }
 	      day += 1;
 	    }
-	    
-	    
+
+
 	    return day;
-	    
+
 	  }
 	}
