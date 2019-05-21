@@ -21,7 +21,7 @@ public class AttendingWeek {
       for (int q = 0; q < weeksPerPeriod; q++) {
         this.schedule.add(null);
       }
-
+      
         int lowestAW = employees.get(0).getNumAttendingWeeks();
         Employee priorityEmpl;
 
@@ -67,7 +67,7 @@ public class AttendingWeek {
 
             if (!noFree)  //if no Free is true the schedule was correctly updated already and the next for loop isn't necessary
             {
-                priorityEmpl = free.get(0);
+                priorityEmpl = free.get(0); //THIS LINE BREAKS BECAUSE THERE IS NO FREE EMPLOYEE MADE WHEN IT GETS HERE
 
                 for (int k = 1; k < free.size(); k++)  //finds the free employee with the least availability
                 {

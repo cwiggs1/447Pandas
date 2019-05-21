@@ -172,8 +172,6 @@ public class Schedule {
 		for (int currShift = 0; currShift < TOTALSHIFTS; currShift++)
 		{
 			//first it checks if the schedule slot is already filled from the attending week schedule
-			//System.out.println(currShift);
-			//System.out.println(employeeSchedule[currShift]);
 			if(employeeSchedule[currShift] != 0)
 			{
 				continue;  //if the slot is already filled then skip it.
@@ -185,17 +183,14 @@ public class Schedule {
 				if(afIndex[j] == currShift)  //check afternoon shifts
 				{
 					shiftType = 0;
-					break;
 				}
 				else if (evIndex[j] == currShift)  //check evening shifts
 				{
 					shiftType = 1;
-					break;
 				}
 				else  //if it goes thorugh to this else it has checked every weekday shift so it must be weekend
 				{
 					shiftType = 2;
-					break;
 				}
 			}
 
@@ -219,7 +214,6 @@ public class Schedule {
 			{
 				for (int k = 0; k < availableDoctors.size(); k++)
 				{
-					/*
 					//if they had a shift one or two spots ago, don't assign them
 					if ((employeeSchedule[currShift - 1] == availableDoctors.get(k).getEmpl_id()) || (employeeSchedule[currShift - 2] == availableDoctors.get(k).getEmpl_id()))
 					{
@@ -238,18 +232,6 @@ public class Schedule {
 							if (availableDoctors.get(k).getShift_count() < bestPick.getShift_count()) {
 								bestPick = availableDoctors.get(k);
 							}
-						}
-					}
-					*/
-					//make this doctor the best pick if they have fewer shifts in the shift type category than the current best pick
-					if (availableDoctors.get(k).getShiftType()[shiftType] <= bestPick.getShiftType()[shiftType])  //this should be comparing two ints
-					{
-						bestPick = availableDoctors.get(k);
-					}
-					else if (availableDoctors.get(k).getShiftType()[shiftType] == bestPick.getShiftType()[shiftType]) {
-						//if they have the same number of shifts of this type, take the one with less overall shifts
-						if (availableDoctors.get(k).getShift_count() < bestPick.getShift_count()) {
-							bestPick = availableDoctors.get(k);
 						}
 					}
 				}
@@ -328,6 +310,8 @@ public class Schedule {
 			}
 		}
 		//moonlighter stuff done
+
+		System.out.println(this.shifts.size());
 
 		//put every employee id into the shifts arraylist
 		for (int a = 0; a < this.shifts.size(); a++)  //shifts.size should be TOTALSHIFTS (274)
