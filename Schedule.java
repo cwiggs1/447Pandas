@@ -50,7 +50,6 @@ public class Schedule {
 			//one with all 3
 			currEmploy = new Employee(333, "Single Test", false);
 			for (int j = 0; j < 247; j++) {
-				//System.out.println(j);
 				currEmploy.setPriority(j, 3);
 			}
 			this.employees.add(currEmploy);
@@ -65,7 +64,6 @@ public class Schedule {
 				for(int y = 0; y < 247; y++) {
 					getInt = rand.nextInt(4);
 					currEmploy.setPriority(y, getInt);
-					//System.out.println(getInt);
 				}
 				this.employees.add(currEmploy);
 			}
@@ -126,9 +124,7 @@ public class Schedule {
 }
 
 public void printShifts() {
-	System.out.println(this.shifts.size());
 	for (int x = 0; x < 247; x++) {
-		//System.out.println(x);
 		System.out.println("Shift #" + x + " Employee ID: " + (this.shifts.get(x)).getEmploy_id());
 	}
 }
@@ -175,7 +171,7 @@ public int generate() {
 	int moonlighterCount = 0;
 	Employee bestPick = new Employee(-1, "DUMMY EMPLOYEE", false);
 	Employee currEmpl;
-	int week = 0;
+	int week = -1;
 
 	//assign a moonlighter instead if someone has a constraint infringed upon and there haven't been too many moonlighters assigned
 	ArrayList<Employee> allMoonlighters = fillMoonlighters(employees);
@@ -184,6 +180,10 @@ public int generate() {
 	//this for loop should fill the rest of the shifts in employeeSchedule
 	for (int currShift = 0; currShift < TOTALSHIFTS; currShift++)
 	{
+		//this is for knowing when the attending doctor is trying to be scheduled
+		if(currShift % 19 == 0) {
+			week += 1;
+		}
 		//first it checks if the schedule slot is already filled from the attending week schedule
 		if(employeeSchedule[currShift] != 0)
 		{
@@ -210,7 +210,7 @@ public int generate() {
 			}
 		}
 
-		//find all employees availability for this shift (could be empty arraylist if nobody is available)
+		//find all employees availability for this shift (could be empty arraylist if nobody is available) - the attending doctor
 		availableDoctors = getAvailability(employees, currShift, awDoctors[week]);
 
 		if(availableDoctors.isEmpty())
@@ -282,10 +282,6 @@ public int generate() {
 			else {
 				bestPick.setHours_count(bestPick.getHours_count() + 8);
 			}
-		}
-
-		if(currShift % 19 == 0) {
-			week += 1;
 		}
 
 	}

@@ -49,8 +49,6 @@ public class AttendingWeek {
             {
                 emplConstraints[j] = (employees.get(j).loopAttendWeekPriority(i) / 5); //5 because there are 5 morning shifts in an attending week
 
-                //System.out.println(emplConstraints[j]);
-
                 if (emplConstraints[j] == 3)  //adds any employee that is fully available for an AW to the 'free' list
                 {
                     free.add(employees.get(j));
